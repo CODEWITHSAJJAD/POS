@@ -211,10 +211,77 @@ class POSApp:
         self.create_admin_tab()
 
     def create_welcome_tab(self):
-        welcome_label = ttk.Label(self.tab_welcome, text="Welcome to SS INTERPRISORS POS System", font=("Helvetica", 24))
-        welcome_label.pack(pady=20)
-        footer_label = ttk.Label(self.tab_welcome, text="Contact: +92 333 5130796\nEmail: chsajjadshahid@outlook.com\nAddress: I-10/MARKAZ ,ISLAMABAD", font=("Helvetica", 12), background="#34495E", foreground="#ECF0F1")
-        footer_label.pack(side="bottom", pady=20)
+        # Create a main frame with a gradient-like effect
+        main_frame = ttk.Frame(self.tab_welcome)
+        main_frame.pack(expand=True, fill='both')
+
+        # Style configuration
+        style = ttk.Style()
+        style.configure("Welcome.TLabel",
+                        font=("Helvetica", 32, "bold"),
+                        foreground="#2E86C1")
+
+        style.configure("Footer.TLabel",
+                        font=("Helvetica", 12),
+                        foreground="#ECF0F1",
+                        background="#34495E")
+
+        # Company logo/image (assuming you have a logo.png in your assets)
+        try:
+            logo = tk.PhotoImage(file="assets/logo.png")
+            logo_label = ttk.Label(main_frame, image=logo)
+            logo_label.image = logo  # Keep a reference
+            logo_label.pack(pady=20)
+        except:
+            pass  # Skip if no logo file exists
+
+        # Welcome message with better styling
+        welcome_frame = ttk.Frame(main_frame)
+        welcome_frame.pack(pady=30)
+
+        welcome_label = ttk.Label(welcome_frame,
+                                  text="Welcome to",
+                                  style="Welcome.TLabel")
+        welcome_label.pack()
+
+        company_label = ttk.Label(welcome_frame,
+                                  text="SS INTERPRISORS",
+                                  font=("Arial", 40, "bold"),
+                                  foreground="#E74C3C")
+        company_label.pack()
+
+        pos_label = ttk.Label(welcome_frame,
+                              text="Point of Sale System",
+                              font=("Helvetica", 24),
+                              foreground="#2C3E50")
+        pos_label.pack()
+
+        # Footer with contact information in a modern card-like design
+        footer_frame = ttk.Frame(main_frame, style="Footer.TFrame")
+        footer_frame.pack(side="bottom", fill="x", pady=20)
+
+        contact_info = {
+            "📞 Contact": "+92 333 5130796",
+            "📧 Email": "chsajjadshahid@outlook.com",
+            "📍 Address": "I-10/MARKAZ, ISLAMABAD"
+        }
+
+        for title, value in contact_info.items():
+            info_frame = ttk.Frame(footer_frame)
+            info_frame.pack(pady=5)
+
+            ttk.Label(info_frame,
+                      text=f"{title}: {value}",
+                      style="Footer.TLabel").pack()
+
+        # Add a simple animation effect (blinking cursor)
+        def blink_cursor():
+            current_color = company_label.cget("foreground")
+            new_color = "#E74C3C" if current_color == "#2C3E50" else "#2C3E50"
+            company_label.configure(foreground=new_color)
+            self.tab_welcome.after(1000, blink_cursor)
+
+        blink_cursor()
 
     def create_add_product_tab(self):
         ttk.Label(self.tab_add, text="Product ID").grid(row=0, column=0, padx=10, pady=10)
